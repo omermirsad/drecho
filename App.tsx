@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Hero from './components/Hero';
 import Research from './components/Research';
 import Publications from './components/Publications';
+import Projects from './components/Projects';
 import AiAssistant from './components/AiAssistant';
 import Footer from './components/Footer';
 import AnimatedBackground from './components/AnimatedBackground';
@@ -64,6 +65,7 @@ const App: React.FC = () => {
         <Hero />
         <Research />
         <Publications />
+        <Projects />
         <AiAssistant />
       </main>
       <Footer />
