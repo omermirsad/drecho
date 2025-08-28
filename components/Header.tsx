@@ -31,6 +31,7 @@ const Header: React.FC = () => {
                 </a>
                 <ul className="hidden md:flex items-center gap-8 list-none">
                     <li><a href="#research" className={navLinkClasses}>Research</a></li>
+                    <li><a href="#about-me" className={navLinkClasses}>About Me</a></li>
                     <li><a href="#publications" className={navLinkClasses}>Publications</a></li>
                     
                     <li className="relative group">

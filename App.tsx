@@ -3,6 +3,7 @@ import React from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Research from './components/Research';
+import AboutMe from './components/AboutMe';
 import Publications from './components/Publications';
 import Projects from './components/Projects';
 import AiAssistant from './components/AiAssistant';
@@ -64,6 +65,7 @@ const App: React.FC = () => {
       <main className="relative z-10">
         <Hero />
         <Research />
+        <AboutMe />
         <Publications />
         <Projects />
         <AiAssistant />
