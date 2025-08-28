@@ -1,11 +1,39 @@
+import React, { useState, useEffect, useRef } from 'react';
 
-import React from 'react';
+const imageUrl = 'https://images.unsplash.com/photo-1593922373711-2a9a811779a1?q=80&w=2940&auto=format&fit=crop';
 
 const Hero: React.FC = () => {
+    const [isIntersecting, setIsIntersecting] = useState(false);
+    const sectionRef = useRef<HTMLElement | null>(null);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsIntersecting(true);
+                    observer.disconnect();
+                }
+            },
+            { rootMargin: "100px" }
+        );
+
+        if (sectionRef.current) {
+            observer.observe(sectionRef.current);
+        }
+
+        return () => {
+            observer.disconnect();
+        };
+    }, []);
+
     return (
-        <section 
-            className="min-h-screen flex items-center justify-center relative p-4 bg-cover bg-center"
-            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1593922373711-2a9a811779a1?q=80&w=2940&auto=format&fit=crop')" }}
+        <section
+            ref={sectionRef}
+            className="min-h-screen flex items-center justify-center relative p-4 bg-cover bg-center transition-background-image duration-1000 ease-in-out"
+            style={{
+                backgroundImage: isIntersecting ? `url(${imageUrl})` : 'none',
+                backgroundColor: '#0f0f1a'
+            }}
         >
             <div className="absolute inset-0 bg-black/60 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.4)_0%,rgba(0,0,0,0.8)_100%)]"></div>
             <div className="text-center max-w-5xl z-10 animate-fadeInUp">

@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface ResearchCardProps {
     imageUrl: string;
@@ -7,20 +6,49 @@ interface ResearchCardProps {
     description: string;
 }
 
-const ResearchCard: React.FC<ResearchCardProps> = ({ imageUrl, title, description }) => (
-    <div 
-        className="h-96 bg-cover bg-center border border-indigo-500/20 rounded-2xl p-8 transition-all duration-300 relative overflow-hidden group hover:border-indigo-400 hover:-translate-y-2 hover:shadow-2xl hover:shadow-indigo-500/20 flex flex-col justify-end"
-        style={{ backgroundImage: `url(${imageUrl})` }}
-    >
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent transition-all duration-300 group-hover:from-black/70 group-hover:via-black/30"></div>
-        <div className="relative z-10 transform transition-transform duration-300 group-hover:translate-y-[-10px]">
-            <h3 className="text-2xl font-bold mb-2 text-slate-100">{title}</h3>
-            <p className="text-slate-300 leading-relaxed opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-h-0 group-hover:max-h-40 overflow-hidden">
-                {description}
-            </p>
+const ResearchCard: React.FC<ResearchCardProps> = ({ imageUrl, title, description }) => {
+    const [isIntersecting, setIsIntersecting] = useState(false);
+    const cardRef = useRef<HTMLDivElement | null>(null);
+
+     useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsIntersecting(true);
+                    observer.disconnect();
+                }
+            },
+            { threshold: 0.1 }
+        );
+
+        if (cardRef.current) {
+            observer.observe(cardRef.current);
+        }
+
+        return () => {
+            observer.disconnect();
+        };
+    }, []);
+
+    return (
+        <div 
+            ref={cardRef}
+            className="h-96 bg-cover bg-center border border-indigo-500/20 rounded-2xl p-8 transition-all duration-500 ease-in-out relative overflow-hidden group hover:border-indigo-400 hover:-translate-y-2 hover:shadow-2xl hover:shadow-indigo-500/20 flex flex-col justify-end"
+            style={{ 
+                backgroundImage: isIntersecting ? `url(${imageUrl})` : 'none',
+                backgroundColor: '#1a1a2e'
+            }}
+        >
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent transition-all duration-300 group-hover:from-black/70 group-hover:via-black/30"></div>
+            <div className="relative z-10 transform transition-transform duration-300 group-hover:translate-y-[-10px]">
+                <h3 className="text-2xl font-bold mb-2 text-slate-100">{title}</h3>
+                <p className="text-slate-300 leading-relaxed opacity-0 transition-opacity duration-300 group-hover:opacity-100 max-h-0 group-hover:max-h-40 overflow-hidden">
+                    {description}
+                </p>
+            </div>
         </div>
-    </div>
-);
+    );
+}
 
 const researchAreas = [
     { imageUrl: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?q=80&w=2874&auto=format&fit=crop", title: "Bioacoustic Analysis", description: "Advanced machine learning algorithms for species identification through echolocation calls. Processing over 10TB of ultrasonic recordings using neural networks." },
