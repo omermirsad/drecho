@@ -1,0 +1,5 @@
+{
+  "name": "Dr. Echo - Chiropterology Research & Conservation",
+  "description": "A web application for Dr. Echo's research lab, showcasing research areas, publications, and an interactive AI assistant powered by Gemini for answering questions about chiropterology.",
+  "requestFramePermissions": []
+}
