@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
+// FIX: Import Variants type from framer-motion to resolve typing errors with animation properties.
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { XIcon } from './Icons';
 
 interface ModalProps {
@@ -29,46 +31,54 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
         };
     }, [isOpen, onClose]);
 
-    if (!isOpen) {
-        return null;
-    }
+    const backdropVariants: Variants = {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1 },
+    };
+
+    // FIX: Explicitly type animation variants with the Variants type to resolve easing type error.
+    const modalVariants: Variants = {
+        hidden: { opacity: 0, scale: 0.9, y: 50 },
+        visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } },
+        exit: { opacity: 0, scale: 0.9, y: 50, transition: { duration: 0.2, ease: 'easeIn' } },
+    };
 
     return ReactDOM.createPortal(
-        <div 
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm animate-fadeIn"
-            onClick={onClose}
-            role="dialog"
-            aria-modal="true"
-        >
-            <div
-                ref={modalRef}
-                className="relative bg-gradient-to-br from-[#1a1a2e] to-[#10101b] rounded-2xl border border-indigo-500/30 shadow-2xl shadow-black/50 w-full max-w-2xl m-4 animate-scaleUp"
-                onClick={(e) => e.stopPropagation()}
-            >
-                <button
+        <AnimatePresence>
+            {isOpen && (
+                <motion.div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm"
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors duration-200"
-                    aria-label="Close modal"
+                    variants={backdropVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="hidden"
+                    role="dialog"
+                    aria-modal="true"
                 >
-                    <XIcon />
-                </button>
-                <div className="p-8">
-                    {children}
-                </div>
-            </div>
-            <style>{`
-                @keyframes fadeIn {
-                    from { opacity: 0; }
-                    to { opacity: 1; }
-                }
-                @keyframes scaleUp {
-                    from { transform: scale(0.95); opacity: 0; }
-                    to { transform: scale(1); opacity: 1; }
-                }
-                .animate-fadeIn { animation: fadeIn 0.3s ease-out forwards; }
-                .animate-scaleUp { animation: scaleUp 0.3s ease-out forwards; }
-            `}</style>
-        </div>,
+                    <motion.div
+                        ref={modalRef}
+                        className="relative bg-gradient-to-br from-[#1a1a2e] to-[#10101b] rounded-2xl border border-indigo-500/30 shadow-2xl shadow-black/50 w-full max-w-2xl m-4"
+                        onClick={(e) => e.stopPropagation()}
+                        variants={modalVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                    >
+                        <button
+                            onClick={onClose}
+                            className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors duration-200 z-10"
+                            aria-label="Close modal"
+                        >
+                            <XIcon />
+                        </button>
+                        <div className="p-8">
+                            {children}
+                        </div>
+                    </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>,
         document.body
     );
 };

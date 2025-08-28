@@ -13,36 +13,8 @@ import AnimatedBackground from './components/AnimatedBackground';
 const App: React.FC = () => {
   return (
     <div className="bg-[#0f0f1a] text-slate-200 overflow-x-hidden" style={{ fontFamily: "'Inter', sans-serif" }}>
-      {/* Custom Keyframe Animations */}
+      {/* Custom Styles */}
       <style>{`
-        @keyframes rotate {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-        @keyframes pulse {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.1); }
-        }
-        @keyframes fadeInUp {
-          0% { opacity: 0; transform: translateY(30px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slideIn {
-            0% { opacity: 0; transform: translateX(-20px); }
-            100% { opacity: 1; transform: translateX(0); }
-        }
-        .animate-fadeInUp {
-          animation: fadeInUp 1s ease;
-        }
-        .animate-slideIn {
-          animation: slideIn 0.5s ease;
-        }
-        .animate-pulse-slow {
-            animation: pulse 2s infinite;
-        }
-        .animate-rotate {
-            animation: rotate 30s linear infinite;
-        }
         /* Custom scrollbar for chat window */
         .custom-scrollbar::-webkit-scrollbar {
             width: 8px;
@@ -57,6 +29,30 @@ const App: React.FC = () => {
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #6366f1;
+        }
+        /* Shine effect for buttons */
+        .btn-shine {
+          position: relative;
+          overflow: hidden;
+        }
+        .btn-shine::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+          transition: all 650ms;
+        }
+        .btn-shine:hover::before {
+          left: 100%;
+        }
+        /* Custom focus outline for accessibility */
+        :focus-visible {
+          outline: 2px solid #6366f1;
+          outline-offset: 2px;
+          border-radius: 0.5rem;
         }
       `}</style>
       

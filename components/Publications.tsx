@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+// FIX: Import Variants type from framer-motion to resolve typing errors with animation properties.
+import { motion, Variants } from 'framer-motion';
 import { Publication } from '../types';
 import Modal from './Modal';
 
@@ -20,7 +22,21 @@ const Publications: React.FC = () => {
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
-        setSelectedPub(null);
+    };
+
+    const containerVariants: Variants = {
+        hidden: {},
+        visible: {
+            transition: {
+                staggerChildren: 0.15,
+            },
+        },
+    };
+
+    // FIX: Explicitly type animation variants with the Variants type to resolve easing type error.
+    const itemVariants: Variants = {
+        hidden: { opacity: 0, x: -30 },
+        visible: { opacity: 1, x: 0, transition: { duration: 0.5, ease: 'easeOut' } },
     };
 
     return (
@@ -33,22 +49,27 @@ const Publications: React.FC = () => {
                     <p className="text-lg text-slate-400">Contributing to the global understanding of chiropteran biology</p>
                 </div>
                 
-                <div className="space-y-6">
+                <motion.div
+                    className="space-y-6"
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.2 }}
+                >
                     {publications.map((pub, index) => (
-                        <div 
-                            key={index} 
-                            className="bg-[rgba(26,26,46,0.5)] border-l-4 border-indigo-500 p-6 rounded-lg transition-all duration-300 hover:bg-[rgba(26,26,46,0.8)] hover:translate-x-2 hover:shadow-lg hover:shadow-indigo-500/20 cursor-pointer"
+                        <motion.button
+                            key={index}
+                            variants={itemVariants}
+                            whileHover={{ x: 8, backgroundColor: 'rgba(26,26,46,0.8)' }}
                             onClick={() => handleOpenModal(pub)}
-                            role="button"
-                            tabIndex={0}
-                            onKeyDown={(e) => e.key === 'Enter' && handleOpenModal(pub)}
+                            className="w-full text-left bg-[rgba(26,26,46,0.5)] border-l-4 border-indigo-500 p-6 rounded-lg shadow-lg shadow-indigo-500/10"
                         >
                             <h3 className="text-lg font-semibold text-slate-100 mb-2">{pub.title}</h3>
                             <p className="text-cyan-400 mb-2">{pub.authors}</p>
                             <p className="text-slate-400 italic">{pub.journal}</p>
-                        </div>
+                        </motion.button>
                     ))}
-                </div>
+                </motion.div>
             </section>
 
             <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
@@ -59,14 +80,16 @@ const Publications: React.FC = () => {
                         </h2>
                         <p className="text-lg text-cyan-400 mb-2">{selectedPub.authors}</p>
                         <p className="text-base text-slate-400 italic mb-8">{selectedPub.journal}</p>
-                        <a 
+                        <motion.a
                             href={selectedPub.fullTextLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-block px-6 py-3 rounded-full font-semibold text-white bg-gradient-to-r from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/30 transition-all duration-300 hover:translate-y-[-2px] hover:shadow-xl hover:shadow-indigo-500/40"
+                            whileHover={{ y: -2, scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="inline-block btn-shine px-6 py-3 rounded-full font-semibold text-white bg-gradient-to-r from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40"
                         >
                             Read Full Text
-                        </a>
+                        </motion.a>
                     </div>
                 )}
             </Modal>

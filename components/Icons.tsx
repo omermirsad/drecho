@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const BatLogoIcon: React.FC = () => (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="w-10 h-10 filter drop-shadow-[0_0_10px_rgba(99,102,241,0.5)] animate-pulse-slow">
+    <svg viewBox="0 0 24 24" fill="currentColor" className="w-10 h-10 filter drop-shadow-[0_0_10px_rgba(99,102,241,0.5)] motion-safe:animate-pulse">
         <path d="M12 2C9 2 6 3 3 5L2 6V12L3 13H5V15L6 16V20L7 21H17L18 20V16L19 15V13H21L22 12V6L21 5C18 3 15 2 12 2M12 4C13.1 4 14 4.9 14 6S13.1 8 12 8 10 7.1 10 6 10.9 4 12 4Z"/>
     </svg>
 );
@@ -15,13 +15,23 @@ export const AiAvatarIcon: React.FC = () => (
     </div>
 );
 
-
 export const XIcon: React.FC = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
     </svg>
 );
 
+export const ChevronLeftIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+  </svg>
+);
+
+export const ChevronRightIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+  </svg>
+);
 
 export const SocialLinkIcon: React.FC<{ path: string }> = ({ path }) => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">

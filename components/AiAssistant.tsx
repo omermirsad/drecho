@@ -1,5 +1,6 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Message, WelcomeMessage } from '../types';
 import { sendMessageStream } from '../services/geminiService';
 import { AiAvatarIcon } from './Icons';
@@ -9,7 +10,7 @@ const AiAssistant: React.FC = () => {
         {
             id: 'welcome-1',
             role: 'welcome',
-            content: "Hello! I'm Dr. Echo's AI assistant. I can answer questions about bat ecology, conservation efforts, research methodologies, and help you understand the fascinating world of chiropterology. How can I assist you today?"
+            content: "Hello! I'm Dr. Echo AI, Dr. Echo's AI assistant. I can answer questions about bat ecology, conservation efforts, research methodologies, and help you understand the fascinating world of chiropterology. How can I assist you today?"
         }
     ]);
     const [input, setInput] = useState('');
@@ -64,8 +65,8 @@ const AiAssistant: React.FC = () => {
     return (
         <section id="ai-assistant" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
             <div className="text-center mb-16">
-                <h2 className="text-4xl font-extrabold bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent mb-4">
-                    AI Research Assistant
+                <h2 className="text-4xl sm:text-5xl font-extrabold bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent mb-4 leading-tight">
+                    Our AI Research Assistant<br />Dr. Echo AI
                 </h2>
                 <p className="text-lg text-slate-400">Ask questions about bat ecology, conservation, or our research</p>
             </div>
@@ -75,20 +76,31 @@ const AiAssistant: React.FC = () => {
                     ref={chatWindowRef}
                     id="chatWindow" 
                     className="h-[500px] bg-[rgba(15,15,26,0.5)] rounded-xl p-6 overflow-y-auto mb-6 custom-scrollbar"
+                    aria-live="polite"
                 >
-                    {messages.map((msg) => (
-                        <div key={msg.id} className={`mb-6 animate-slideIn flex gap-4 items-start ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                            {msg.role !== 'user' && <AiAvatarIcon />}
-                            <div className={`py-3 px-5 rounded-2xl max-w-[80%] ${
-                                msg.role === 'user' ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white order-last' : 
-                                'bg-[rgba(26,26,46,0.8)] text-slate-200 border border-indigo-500/20'
-                            }`}>
-                                <div className="prose prose-invert prose-p:my-2" dangerouslySetInnerHTML={{ __html: msg.content.replace(/\n/g, '<br />') }} />
-                            </div>
-                        </div>
-                    ))}
+                    <AnimatePresence>
+                        {messages.map((msg) => (
+                            <motion.div
+                                key={msg.id}
+                                layout
+                                initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                transition={{ duration: 0.3, ease: 'easeOut' }}
+                                className={`mb-6 flex gap-4 items-start ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                            >
+                                {msg.role !== 'user' && <AiAvatarIcon />}
+                                <div className={`py-3 px-5 rounded-2xl max-w-[80%] ${
+                                    msg.role === 'user' ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white order-last' : 
+                                    'bg-[rgba(26,26,46,0.8)] text-slate-200 border border-indigo-500/20'
+                                }`}>
+                                    <div className="prose prose-invert prose-p:my-2" dangerouslySetInnerHTML={{ __html: msg.content.replace(/\n/g, '<br />') }} />
+                                </div>
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
                     {isLoading && messages[messages.length-1].role === 'user' && (
-                         <div className="mb-6 animate-slideIn flex gap-4 items-start justify-start">
+                         <div className="mb-6 flex gap-4 items-start justify-start">
                             <AiAvatarIcon />
                             <div className="py-3 px-5 rounded-2xl max-w-[80%] bg-[rgba(26,26,46,0.8)] text-slate-200 border border-indigo-500/20">
                                 <div className="flex items-center gap-2">
@@ -111,13 +123,15 @@ const AiAssistant: React.FC = () => {
                         placeholder="Ask about bat species, echolocation..."
                         disabled={isLoading}
                     />
-                    <button 
+                    <motion.button
                         onClick={handleSendMessage}
                         disabled={isLoading}
-                        className="px-8 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white border-none rounded-full font-semibold cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-indigo-500/40 disabled:opacity-50 disabled:cursor-not-allowed"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="btn-shine px-8 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white border-none rounded-full font-semibold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         Send
-                    </button>
+                    </motion.button>
                 </div>
             </div>
         </section>
